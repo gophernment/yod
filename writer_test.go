@@ -121,18 +121,18 @@ func TestWriterInformationalExceptOnltStringType(t *testing.T) {
 		t.Errorf("It should write status code as %d error but was %d\n", http.StatusContinue, recoder.Code)
 	}
 
-	// err = w.InternalServerError(map[string]string{"status": "other type"})
-	// if err != nil {
-	// 	t.Error("It should not error")
-	// 	return
-	// }
+	recoder2 := httptest.NewRecorder()
+	w2 := Writer{
+		w: recoder2,
+	}
+	w2.Informational(http.StatusContinue, map[string]string{"status": "other type"})
 
-	// resp := recoder.Result()
-	// body, _ := ioutil.ReadAll(resp.Body)
+	resp2 := recoder2.Result()
+	body, _ = ioutil.ReadAll(resp2.Body)
 
-	// if string(body) != writerNotSupportDataType {
-	// 	t.Errorf("It should write plain text %q but was %q\n", writerNotSupportDataType, string(body))
-	// }
+	if string(body) != writerNotSupportDataType {
+		t.Errorf("It should write plain text %q but was %q\n", writerNotSupportDataType, string(body))
+	}
 
 	// if recoder.Code != http.StatusInternalServerError {
 	// 	t.Error("It should write status code as http internal server error but was", recoder.Code)

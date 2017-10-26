@@ -16,6 +16,12 @@ func (w *Writer) SetHeader(key, value string) {
 	w.w.Header().Set(key, value)
 }
 
+func (w *Writer) internalServerErrorString() error {
+	w.w.WriteHeader(http.StatusInternalServerError)
+	_, err := w.w.Write([]byte(writerNotSupportDataType))
+	return err
+}
+
 func (w *Writer) OK(v interface{}) error {
 	if s, ok := v.(string); ok {
 		w.w.WriteHeader(http.StatusOK)
@@ -33,10 +39,7 @@ func (w *Writer) InternalServerError(v interface{}) error {
 		return err
 	}
 
-	w.w.WriteHeader(http.StatusInternalServerError)
-	_, err := w.w.Write([]byte(writerNotSupportDataType))
-
-	return err
+	return w.internalServerErrorString()
 }
 
 func (w *Writer) String(code int, s string) error {
@@ -46,7 +49,11 @@ func (w *Writer) String(code int, s string) error {
 }
 
 func (w *Writer) Informational(code int, v interface{}) error {
-	return w.String(code, v.(string))
+	if s, ok := v.(string); ok {
+		return w.String(code, s)
+	}
+
+	return w.internalServerErrorString()
 }
 
 func (w *Writer) Successful(code int, v interface{}) error {
