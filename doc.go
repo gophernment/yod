@@ -10,6 +10,7 @@ import (
 type ErrorType = error
 
 type App struct {
+	errorMapping map[int]ErrorType
 }
 
 func New() App {
@@ -17,11 +18,11 @@ func New() App {
 }
 
 // MapError set return http status code to specific error type
-func (y *App) MapError(code int, err ErrorType) {
-
+func (a *App) MapError(code int, err ErrorType) {
+	a.errorMapping[code] = err
 }
 
-func (y *App) Serve(port string) {
+func (a *App) Serve(port string) {
 
 }
 
