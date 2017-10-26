@@ -39,8 +39,14 @@ func (w *Writer) InternalServerError(v interface{}) error {
 	return err
 }
 
+func (w *Writer) String(code int, s string) error {
+	w.w.WriteHeader(code)
+	_, err := w.w.Write([]byte(s))
+	return err
+}
+
 func (w *Writer) Informational(code int, v interface{}) error {
-	return nil
+	return w.String(code, v.(string))
 }
 
 func (w *Writer) Successful(code int, v interface{}) error {
