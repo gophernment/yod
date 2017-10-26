@@ -23,14 +23,20 @@ func (w *Writer) OK(v interface{}) error {
 		return err
 	}
 
+	return w.InternalServerError(writerNotSupportDataType)
+}
+
+func (w *Writer) InternalServerError(v interface{}) error {
+	if s, ok := v.(string); ok {
+		w.w.WriteHeader(http.StatusInternalServerError)
+		_, err := w.w.Write([]byte(s))
+		return err
+	}
+
 	w.w.WriteHeader(http.StatusInternalServerError)
 	_, err := w.w.Write([]byte(writerNotSupportDataType))
 
 	return err
-}
-
-func (w *Writer) InternalServerError(v interface{}) error {
-	return nil
 }
 
 func (w *Writer) Informational(code int, v interface{}) error {
