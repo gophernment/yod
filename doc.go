@@ -73,25 +73,14 @@ func (r *Request) Get(k string) interface{} {
 }
 
 type ResponseWriter interface {
-	Header(v interface{}) error
-	Write(code int, v interface{}) error
-	Code(i int)
-}
-
-type JSONWriter struct {
-	ResponseWriter
-}
-
-func (JSONWriter) Write(code int, v interface{}) error {
-	return nil
-}
-
-type XMLWriter struct {
-	ResponseWriter
-}
-
-func (XMLWriter) Write(code int, v interface{}) error {
-	return nil
+	SetHeader(key, value string)
+	OK(v interface{}) error
+	InternalServerError(v interface{}) error
+	Informational(code int, v interface{}) error
+	Successful(code int, v interface{}) error
+	Redirection(code int, v interface{}) error
+	ClientError(code int, v interface{}) error
+	ServerError(code int, v interface{}) error
 }
 
 type Handler interface {
