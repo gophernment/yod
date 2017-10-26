@@ -110,7 +110,7 @@ func JSONMiddleware() MiddlewareFunc {
 		return func(r *Request, w ResponseWriter) (err error) {
 			w = &JSONWriter{}
 			r.DecodeContent = JSONDecoder
-			h(r, w)
+			return h(r, w)
 		}
 	}
 }
@@ -120,7 +120,7 @@ func XMLMiddleware() MiddlewareFunc {
 		return func(r *Request, w ResponseWriter) (err error) {
 			w = &XMLWriter{}
 			r.DecodeContent = XMLDecoder
-			h(r, w)
+			return h(r, w)
 		}
 	}
 }
@@ -129,11 +129,11 @@ type Route struct {
 	Method string
 	Path   string
 	H      Handler
-	MW     []Middleware
+	MW     []MiddlewareFunc
 	Name   string
 }
 
-func NewRoute(method, path string, h Handler, mw ...Middleware) Route {
+func NewRoute(method, path string, h Handler, mw ...MiddlewareFunc) Route {
 	fn := strings.Split(runtime.FuncForPC(reflect.ValueOf(h).Pointer()).Name(), "/")
 	return Route{
 		Method: method,
