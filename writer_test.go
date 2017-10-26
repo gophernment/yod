@@ -30,3 +30,27 @@ func TestWriterOK(t *testing.T) {
 		t.Error("It should write status code as http ok but was", recoder.Code)
 	}
 }
+
+func TestWriterWithOtherTypeShouldError(t *testing.T) {
+	recoder := httptest.NewRecorder()
+	w := Writer{
+		w: recoder,
+	}
+
+	err := w.OK(map[string]string{"status": "ok"})
+	if err != nil {
+		t.Error("It should not error")
+		return
+	}
+
+	resp := recoder.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	if string(body) != writerNotSupportDataType {
+		t.Errorf("It should write plain text %q but was %q\n", writerNotSupportDataType, string(body))
+	}
+
+	if recoder.Code != http.StatusInternalServerError {
+		t.Error("It should write status code as http internal server error but was", recoder.Code)
+	}
+}

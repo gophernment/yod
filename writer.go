@@ -1,8 +1,11 @@
 package yod
 
 import (
-	"errors"
 	"net/http"
+)
+
+const (
+	writerNotSupportDataType = "writer not support data type"
 )
 
 type Writer struct {
@@ -19,7 +22,11 @@ func (w *Writer) OK(v interface{}) error {
 		_, err := w.w.Write([]byte(s))
 		return err
 	}
-	return errors.New("writer not support content-type")
+
+	w.w.WriteHeader(http.StatusInternalServerError)
+	_, err := w.w.Write([]byte(writerNotSupportDataType))
+
+	return err
 }
 
 func (w *Writer) InternalServerError(v interface{}) error {
