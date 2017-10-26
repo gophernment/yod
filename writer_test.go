@@ -2,6 +2,7 @@ package yod
 
 import (
 	"io/ioutil"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 )
@@ -23,5 +24,9 @@ func TestWriterOK(t *testing.T) {
 
 	if string(body) != "ok" {
 		t.Error("It should write plain text ok but was", string(body))
+	}
+
+	if recoder.Code != http.StatusOK {
+		t.Error("It should write status code as http ok but was", recoder.Code)
 	}
 }

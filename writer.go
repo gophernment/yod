@@ -15,6 +15,7 @@ func (w *Writer) SetHeader(key, value string) {
 
 func (w *Writer) OK(v interface{}) error {
 	if s, ok := v.(string); ok {
+		w.w.WriteHeader(http.StatusOK)
 		_, err := w.w.Write([]byte(s))
 		return err
 	}
