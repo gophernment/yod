@@ -1,11 +1,13 @@
 package yod
 
 import (
+	"errors"
 	"net/http"
 )
 
 const (
 	writerNotSupportDataType = "writer not support data type"
+	statusIsWrong            = "status code is wrong"
 )
 
 type Writer struct {
@@ -49,6 +51,10 @@ func (w *Writer) String(code int, s string) error {
 }
 
 func (w *Writer) Informational(code int, v interface{}) error {
+	if code > 199 {
+		return errors.New(statusIsWrong)
+	}
+
 	if s, ok := v.(string); ok {
 		return w.String(code, s)
 	}
