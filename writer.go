@@ -59,13 +59,7 @@ func (w *Writer) ServerError(code int, v interface{}) error {
 	return nil
 }
 
-type StringWriter struct {
-	ResponseWriter
-}
-
-func (StringWriter) Value(code int, v interface{}) error {
-	return nil
-}
+type StringWriter = Writer
 
 type JSONWriter struct {
 	ResponseWriter
